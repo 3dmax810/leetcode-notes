@@ -71,3 +71,25 @@ class Solution:
             lists = merged
             n = len(lists)
         return lists[0]
+    
+    
+# 方法三,使用最小堆,插入取出元素
+# heapq 的插入,移除方法
+# heapq.heappush(堆名, (val, id, node))  这里补充id是因为val相同的情况下,自动比较元组的下一位
+# val,id,node = heapq.heappop(堆名) 插入和移除的形式要一致
+class Solution:
+    def mergeKLists(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
+        heap = []
+        n = len(lists)
+        for id, node in enumerate(lists):
+            if node:
+                heapq.heappush(heap, (node.val, id, node))
+        dummy = ListNode()
+        ptr = dummy
+        while heap:
+            tmin, id, node = heapq.heappop(heap)
+            ptr.next = node
+            ptr = ptr.next
+            if node.next:
+                heapq.heappush(heap, (node.next.val, id, node.next))
+        return dummy.next
